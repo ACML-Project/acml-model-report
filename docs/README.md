@@ -8,6 +8,6 @@
 
 > **Members:**<br>
 - Nashita Chowdhury (2554397)
-- Ariella Lewis ()
+- Ariella Lewis (2596406)
 -  Liam Brady (2596852)
 -  Chloe Dube (2602515)
