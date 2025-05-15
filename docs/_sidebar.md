@@ -1,6 +1,7 @@
 * [Home](/)
 * [Introduction](intro.md)
 * [Dataset Description](1.md)
+* [Model Choice](model.md)
 * [ Python Libraries, Frameworks and packages](2.md)
-* [ Model Choice](model.md)
 * [Section 3](3.md)
+* [References](references.md)
