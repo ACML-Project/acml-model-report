@@ -7,7 +7,7 @@
 > COMS4030A/7047A
 
 > **Members:**<br>
-- Nashita Chowdhury ()
+- Nashita Chowdhury (2554397)
 - Ariella Lewis ()
--  Liam Brady ()
+-  Liam Brady (2596852)
 -  Chloe Dube (2602515)
