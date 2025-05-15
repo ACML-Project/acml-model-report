@@ -18,10 +18,10 @@ This one cycle of LSTM is considered a single-time step.
 The cell state will carry all the information about the data as well as the timestamps.
 
 Finally the LSTM computations are done in the following way: 
-Computation in a LSTM is done by first concatenating the current input x(t) with the previous short-term memory h(t − 1) to get x(t)h(t − 1) and then computing 
+Computation in a LSTM is done by first concatenating the current input `x(t)` with the previous short-term memory `h(t − 1)` to get `x(t)h(t − 1)` and then computing 
 
 - Forget gate: f(t) = σ(x(t)h(t − 1)W<sub>f</sub> + b<sub>f</sub>)
-- Input gate: i(t) = σ(x(t)h(t − 1)W<sub>i</sub> + b<sub>i</sub>)
+- Input gate: i(t) =  σ(x(t)h(t − 1)W<sub>i</sub> + b<sub>i</sub>)
 - Candidate memory: c(t) = tanh(x(t)h(t − 1)W<sub>c</sub>  + b<sub>c</sub> )
 - Output gate: o(t) = σ(x(t)h(t − 1)W<sub>o</sub>  + b<sub>o</sub> )
 
@@ -34,7 +34,13 @@ where  represents pointwise multiplication of vectors
 
 ## Reasoning for choice of LSTM
 
+Most machine learning models often rely on fixed-size input vectors and may fail to capture the nuanced dependencies that exist across time steps in a sequence. Whereas, Long Short-Term Memory (LSTM) networks are specifically designed to handle sequential data, making them appropriate for text classification tasks such as fake news detection.
+
+The memory and gating features allow LSTMs to selectively retain or discard information over long sequences, enabling the model to learn both short-term and long-term dependencies within the text. This means that, LSTMs can understand context over multiple words and sentences which is an essential capability when dealing with politically based or convoluted language that often appears in fake news content.
+
 Considering our dataset, we have the task of identifying whether excerpts of text can be classified as fake or genuine news articles. LSTMs are relevant in this case in that they have feedback connections, allowing them to process entire sequences of data, not just individual data points. This makes them highly effective in understanding and predicting patterns in sequential data like text and speech (saxena, 2021).
+
+Given these strengths, building an LSTM model for the binary classification seemed an appropriate choice.
 
 
 
