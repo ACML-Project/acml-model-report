@@ -54,11 +54,12 @@ Given these strengths, building an LSTM model for the binary classification seem
 | **LSTM Units**        | 128                              | 
 | **Batch Size**        | 32 or 64                         | 
 | **Epochs**            | 10–15                            | 
-| **Embedding Dimension** | 300                            | 
+| **Embedding Dimension** | 128                           | 
 | **Optimizer**         | Adam                             | 
 | **Loss**              | Binary Cross-Entropy             | 
 | **Metrics**           | Accuracy                         | 
 | **No. of LSTM layers**| N                                 |
+| **Dropout**           | 0.5                               |
 
 
 These are just example values.
