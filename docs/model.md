@@ -68,14 +68,14 @@ Given these strengths, building an LSTM model for the binary classification seem
 - **Max Seq Length**: The number of words, tokens, allowed in each input sample.
 - **LSTM Hidden Units** :  The number of hidden state dimensions in each LSTM cell, how much memory each LSTM unit has. 
 - **Batch Size** :  The number of training examples the model sees before updating weights.
-- **Learn Rate**: 
+- **Learn Rate**: A changing value that determines how much the model will tune its hyperparameters and the rate at which it will learn, it starts at 0.001, and will change as the model learns.
 - **Epochs**: One full pass through the entire training dataset.   
 - **Embedding dimension**: The size of the vector space each word is mapped into. 
     - The embedding layer converts words or phrases into a dense vector space, meaning that each word is represented as a vector of real numbers (Yadav, 2024).
 - **Optimizer**: The algorithm used to update weights in the neural network during training.  
 - **Loss**: The function the model tries to minimize, so it measures the difference between predicted and actual outputs.            
 - **No. of LSTM layers**: How many LSTM layers are stacked, in our binary classification case it is better limited to 1.
-- **Droput** - 
+- **Droput** - Dropout is a regularization method where input and recurrent connections to LSTM units are probabilistically excluded from activation and weight updates while training a network. This has the effect of reducing overfitting and improving model performance (Brownlee, 2017)
 - **Weight Decay** - 
 
 ### Evaluation Metrics
