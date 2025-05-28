@@ -50,25 +50,26 @@ Given these strengths, building an LSTM model for the binary classification seem
 
 | Hyperparameter        | Value                            | 
 | --------------------- | -------------------------------- | 
-| **Max Seq Length**    | 400                              | 
-| **LSTM Units**        | 128                              | 
-| **Batch Size**        | 32 or 64                         | 
-| **Epochs**            | 10–15                            | 
+| **Max Seq Length**    | 256                              | 
+| **LSTM Hidden Units**        | 128                              | 
+| **Batch Size**        | 16                       | 
+| **Learn Rate**           | 0.001                           |
+| **Epochs**            | 15 - 20                           | 
 | **Embedding Dimension** | 128                           | 
 | **Optimizer**         | Adam                             | 
 | **Loss**              | Binary Cross-Entropy             | 
 | **Metrics**           | Accuracy                         | 
-| **No. of LSTM layers**| N                                 |
+| **No. of LSTM layers**| 2                                 |
 | **Dropout**           | 0.5                               |
+| **Weight Decay**           |  1e-5                             |
 
-
-These are just example values.
 
 ##### Further explanation
 
-- **Max Seq Length**: The number of words, tokens, allowd in each input sample.
-- **LSTM Units** :  The number of hidden state dimensions in each LSTM cell, how much memory each LSTM unit has. 
+- **Max Seq Length**: The number of words, tokens, allowed in each input sample.
+- **LSTM Hidden Units** :  The number of hidden state dimensions in each LSTM cell, how much memory each LSTM unit has. 
 - **Batch Size** :  The number of training examples the model sees before updating weights.
+- **Learn Rate**: 
 - **Epochs**: One full pass through the entire training dataset.   
 - **Embedding dimension**: The size of the vector space each word is mapped into. 
     - The embedding layer converts words or phrases into a dense vector space, meaning that each word is represented as a vector of real numbers (Yadav, 2024).
@@ -76,6 +77,8 @@ These are just example values.
 - **Loss**: The function the model tries to minimize, so it measures the difference between predicted and actual outputs.       
 - **Metrics**: Evaluation criteria during training and testing. E.g `accuracy` for training, `F1, precision, and recall` for evaluation       
 - **No. of LSTM layers**: How many LSTM layers are stacked, in our binary classification case it is better limited to 1.
+- **Droput** - 
+- **Weight Decay** - 
 
 
 
