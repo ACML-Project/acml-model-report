@@ -58,7 +58,6 @@ Given these strengths, building an LSTM model for the binary classification seem
 | **Embedding Dimension** | 128                           | 
 | **Optimizer**         | Adam                             | 
 | **Loss**              | Binary Cross-Entropy             | 
-| **Metrics**           | Accuracy                         | 
 | **No. of LSTM layers**| 2                                 |
 | **Dropout**           | 0.5                               |
 | **Weight Decay**           |  1e-5                             |
@@ -74,19 +73,34 @@ Given these strengths, building an LSTM model for the binary classification seem
 - **Embedding dimension**: The size of the vector space each word is mapped into. 
     - The embedding layer converts words or phrases into a dense vector space, meaning that each word is represented as a vector of real numbers (Yadav, 2024).
 - **Optimizer**: The algorithm used to update weights in the neural network during training.  
-- **Loss**: The function the model tries to minimize, so it measures the difference between predicted and actual outputs.       
-- **Metrics**: Evaluation criteria during training and testing. E.g `accuracy` for training, `F1, precision, and recall` for evaluation       
+- **Loss**: The function the model tries to minimize, so it measures the difference between predicted and actual outputs.            
 - **No. of LSTM layers**: How many LSTM layers are stacked, in our binary classification case it is better limited to 1.
 - **Droput** - 
 - **Weight Decay** - 
 
+### Evaluation Metrics
+
+- **Metrics**: Evaluation criteria during training and testing. E.g `accuracy` for training, `F1, precision, and recall` for evaluation.
+
+| Metric      | Formula               | Purpose                  |
+|-------------|-----------------------|--------------------------|
+| **Accuracy**  | $ \frac{TP + TN}{Total} $| Measures overall prediction correctness |
+| **Precision** | $\frac{TP}{TP + FP}$    | Controls false positives |
+| **Recall**    | $\frac{TP}{TP + FN}$    | Controls false negatives |
+| **F1-Score**  | $2 \times \frac{P \times R}{P + R}$ | Harmonic mean of precision and recall |
+
+##### These values are used to compute the confusion matrix:
+- **TP**: True Positives  
+- **TN**: True Negatives  
+- **FP**: False Positives  
+- **FN**: False Negatives   
 
 
 ### General algorithm:
 
 The general algorithm is as follows: 
 
-```
+```python
 sequence_len = N
 
 for i in range (0,sequence_len):
