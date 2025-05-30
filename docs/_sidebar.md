@@ -7,4 +7,5 @@
 * [Hyperparameter Tuning](tuning.md)
 * [Training and Validation](during_training.md)
 * [Results on Test Dataset](testing.md)
+* [Conclusion](conclusion.md)
 * [References](references.md)
