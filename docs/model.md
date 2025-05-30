@@ -76,7 +76,8 @@ Given these strengths, building an LSTM model for the binary classification seem
 - **Loss**: The function the model tries to minimize, so it measures the difference between predicted and actual outputs.            
 - **No. of LSTM layers**: How many LSTM layers are stacked, in our binary classification case it is better limited to 1.
 - **Droput** - Dropout is a regularization method where input and recurrent connections to LSTM units are probabilistically excluded from activation and weight updates while training a network. This has the effect of reducing overfitting and improving model performance (Brownlee, 2017)
-- **Weight Decay** - 
+- **Weight Decay** - Also known as L2 Regularization, is used to regularize the weights by penalizing large weights in the network.
+
 
 ### Evaluation Metrics
 
