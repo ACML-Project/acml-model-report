@@ -482,7 +482,13 @@ With outliers removed, the above plot shows the length of preprocessed articles 
 
 ![alt text](media/training.png)
 
-The above curves demonstrate optimal learning dynamics, with both training and validation loss decreasing rapidly and converging within the first few epochs, while accuracy metrics reached approximately 99% by epoch … and remained stable thereafter. The close alignment between training and validation performance throughout the training process indicates effective generalisation without overfitting, validating the model's ability to perform reliably on unseen data.
+The above curves demonstrate optimal learning dynamics, with both training and validation loss decreasing rapidly and converging within the first few epochs, while accuracy metrics reached approximately 99% by epoch two and remained stable thereafter. The close alignment between training and validation performance throughout the training process indicates effective generalisation without overfitting, validating the model's ability to perform reliably on unseen data.
+
+## Confusion Matrix
+
+![alt text](media/confusionV.png)
+
+The confusion matrix analysis, provided above, reveals only 45 misclassifications out of 7 729 test samples. This consists of 41 false positive (real news incorrectly classified as fake) and 4 false negatives (fake news incorrectly classified as real).
 
 \newpage
 <div class="page-break"></div>
