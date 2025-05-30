@@ -482,7 +482,7 @@ With outliers removed, the above plot shows the length of preprocessed articles 
 
 ![alt text](media/training.png)
 
-The above curves demonstrate optimal learning dynamics, with both training and validation loss decreasing rapidly and converging within the first few epochs, while accuracy metrics reached approximately 99% by epoch two and remained stable thereafter. The close alignment between training and validation performance throughout the training process indicates effective generalisation without overfitting, validating the model's ability to perform reliably on unseen data.
+The above curves demonstrate optimal learning dynamics, with both training and validation loss decreasing rapidly and converging within the first few epochs, while accuracy metrics reached approximately 99% by epoch five and remained stable thereafter. Early stopping was implemented to stop training once the model stopped improving. The close alignment between training and validation performance throughout the training process indicates effective generalisation, validating the model's ability to perform reliably on unseen data.
 
 ## Confusion Matrix
 
