@@ -5,4 +5,6 @@
 * [Model Choice](model.md)
 * [Python Libraries, Frameworks and packages](2.md)
 * [Hyperparameter Tuning](tuning.md)
+* [Training and Validation](during_training.md)
+* [Results on Test Dataset](testing.md)
 * [References](references.md)
