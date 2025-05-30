@@ -57,7 +57,7 @@ This report outlines the architecture and implementation of the LSTM model, deta
 
 # The Dataset
 
-### Fake News detection dataset
+## Fake News detection dataset
 The dataset can be found at: https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset/data .
 
 There are two datasets included. We have `Fake.csv` and `True.csv` where the structure is as follows →
@@ -77,14 +77,31 @@ There are two datasets included. We have `Fake.csv` and `True.csv` where the str
 
 The targets for the data are `Fake` and `Real`, thus the classification of the dataset is a binary text classification. To be able to work with the data appropriately, a file `Create_Dataset.py` merges the true and fake datasets and returns a merged and shuffled collection. This collection has the null values and duplicates removed, resulting in the following distribution:
 
-![alt text](media/image-1.png)
 
 There is a moderate class imbalance (~45.2% `Fake` vs ~54.84% `Real` news articles). Oversampling and reweighting proved unnecessary as the model performed well on both classes and the confusion matrix (discussed later) showed balanced errors.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{media/image-1.png}
+  \caption{Number of Fake News vs Real News}
+  \label{fig:fake-vs-real}
+\end{figure}
+
 It was decided that only the body text of the news articles would be used in training the model. As seen below, the subject of the news articles made classification trivial as all the `Real` articles are classed as either `World News` or `Politics News` while the `Fake` articles had more variation - `US News`, `Middle East`, `Left News`, `Government News`, `Politics` and, simply, `News`. 
 
-![alt text](media/class.png)
-![alt text](media/chart.png)
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{media/class.png}
+  \caption{News subject categories by label}
+  \label{fig:class-distribution}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{media/chart.png}
+  \caption{Distribution of subject labels for Fake vs Real news}
+  \label{fig:subject-distribution}
+\end{figure}
 
 \newpage
 
@@ -98,7 +115,7 @@ It was decided that only the body text of the news articles would be used in tra
  - 20% validation set – for hyperparameter tuning and model selection.
  - 20% test set – for final performance evaluation.
 
- ![alt text](media/pi.png)
+ ![ ](media/pi.png)
 
 ## Preprocessing pipeline:
 **1. Dataset Construction and Removing Duplicates:**
@@ -156,7 +173,7 @@ LSTMs can hold memory for a significant amount of time so that it is possible fo
 
 The general structure is as follows: 
 
-![alt text](media/image.png) (saxena, 2021)
+![ ](media/image.png) (saxena, 2021)
 
 - Part 1 (Forget Gate): chooses whether the information coming from the previous timestamp is to be remembered or is irrelevant and can be forgotten.
 - Part 2 (Input Gate): the cell tries to learn new information from the input to this cell.
@@ -167,16 +184,16 @@ This one cycle of LSTM is considered a single-time step.
 The cell state will carry all the information about the data as well as the timestamps.
 
 Finally the LSTM computations are done in the following way: 
-Computation in a LSTM is done by first concatenating the current input `x(t)` with the previous short-term memory `h(t − 1)` to get `x(t)h(t − 1)` and then computing 
+Computation in a LSTM is done by first concatenating the current input `x(t)` with the previous short-term memory `h(t - 1)` to get `x(t)h(t - 1)` and then computing 
 
-- Forget gate: f(t) = σ(x(t)h(t − 1)W<sub>f</sub> + b<sub>f</sub>)
-- Input gate: i(t) =  σ(x(t)h(t − 1)W<sub>i</sub> + b<sub>i</sub>)
-- Candidate memory: c(t) = tanh(x(t)h(t − 1)W<sub>c</sub>  + b<sub>c</sub> )
-- Output gate: o(t) = σ(x(t)h(t − 1)W<sub>o</sub>  + b<sub>o</sub> )
+- Forget gate: f(t) = $\sigma$(x(t)h(t - 1)W<sub>f</sub> + b<sub>f</sub>)
+- Input gate: i(t) =  $\sigma$(x(t)h(t - 1)W<sub>i</sub> + b<sub>i</sub>)
+- Candidate memory: c(t) = tanh(x(t)h(t - 1)W<sub>c</sub>  + b<sub>c</sub> )
+- Output gate: o(t) = $\sigma$(x(t)h(t - 1)W<sub>o</sub>  + b<sub>o</sub> )
 
 The above vectors are then combined as follows:
-- &tilde;c(t) = f(t)⊙&tilde;c(t − 1) + i(t)⊙c(t)
-- h(t) = o(t)⊙tanh(&tilde;c(t))
+- &tilde;c(t) = f(t)$\odot$&tilde;c(t - 1) + i(t)$\odot$c(t)
+- h(t) = o(t)$\odot$tanh(&tilde;c(t))
 where  represents pointwise multiplication of vectors
 
 
@@ -244,10 +261,10 @@ In this implementation, the machine learning algorithm used was a supervised lea
 
 | Metric      | Formula               | Purpose                  |
 |-------------|-----------------------|--------------------------|
-| **Accuracy**  | $ \frac{TP + TN}{Total} $| Measures overall prediction correctness |
-| **Precision** | $\frac{TP}{TP + FP}$    | Controls false positives |
-| **Recall**    | $\frac{TP}{TP + FN}$    | Controls false negatives |
-| **F1-Score**  | $2 \times \frac{P \times R}{P + R}$ | Harmonic mean of precision and recall |
+| **Accuracy**  | $$ \frac{TP + TN}{Total} $$| Measures overall prediction correctness |
+| **Precision** | $$\frac{TP}{TP + FP}$$    | Controls false positives |
+| **Recall**    | $$\frac{TP}{TP + FN}$$    | Controls false negatives |
+| **F1-Score**  | $$2 \times \frac{P \times R}{P + R}$$ | Harmonic mean of precision and recall |
 
 ##### These values are used to compute the confusion matrix:
 - **TP**: True Positives  
@@ -295,7 +312,6 @@ The next section will explore the Python libraries and frameworks used to implem
 ## Pytorch
 The model and data pre-processing are implemented using `PyTorch` as an aspect, PyTorch is an open source machine learning (ML) framework based on the Python programming language and the Torch library (Yasar, 2022).
 
-### How PyTorch was used :
 (Pytorch.org, 2024)
 
 - `Create_Datasets.py`
@@ -453,11 +469,11 @@ Tuning was done manually. The hyperparameters were modified one at a time to tes
 
 Originally, our model utilised only one LSTM layer. This was increased to two layers to capture hierarchical patterns and dependencies, ultimately increasing accuracy. To avoid further overfitting, regularization was introduced via:
 
-### Dropout
+## Dropout
 
 A fraction of the neurons in a layer are dropped out each forward pass so the model does not learn to rely on any one feature. We set this to 0.5.
 
-### Weight decay
+## Weight decay
 
 Equivalent to L2 regularization, we introduced a weight decay of 1e-5 to prevent the model from memorising training data and prevent exploding gradients.
 
@@ -469,7 +485,7 @@ The original batch size was 32 and was later decreased to 16 for better generali
 
 Shorter sequences (256 tokens) tend to focus on the core information and the beginning of news articles are typically the most important, whereas longer sequences (512 tokens) contain background and elaboration, providing more context but diluting the signal needed for classification and forcing the model to compress more information into a fixed size hidden state. Beyond a certain point, LSTMs do not scale well with longer sequence length, as we discovered during the initial runs with a maximum length of 512.
 
-![alt text](media/Article-length.png)
+![ ](media/Article-length.png)
 
 With outliers removed, the above plot shows the length of preprocessed articles before truncation, revealing that the second quartile contains 224 tokens. We changed the maximum article length to 256 and noticed a significant increase in accuracy and no overfitting.
 
@@ -480,7 +496,7 @@ With outliers removed, the above plot shows the length of preprocessed articles 
 
 ## Training Progress Curves
 
-![alt text](media/training.png)
+![ ](media/training.png)
 
 The above curves demonstrate optimal learning dynamics, with both training and validation loss decreasing rapidly and converging within the first few epochs, while accuracy metrics reached approximately 99% by epoch … and remained stable thereafter. The close alignment between training and validation performance throughout the training process indicates effective generalisation without overfitting, validating the model's ability to perform reliably on unseen data.
 
@@ -493,19 +509,19 @@ The trained LSTM model demonstrates exceptional performance on the test dataset,
 
 ## Confusion Matrix
 
-![alt text](media/confusion.png)
+![ ](media/confusion.png)
 
 The confusion matrix analysis, provided above, reveals only 15 misclassifications out of 7 729 test samples. This consists of 13 false positive (real news incorrectly classified as fake) and 2 false negatives (fake news incorrectly classified as real). This minimal error rate indicates that the model successfully learned to distinguish between authentic and fabricated news articles with great reliability. The balanced performance across both classes demonstrates that the LSTM architecture effectively captured the distinctive linguistic and structural patterns present in each category without exhibiting bias toward either class.
 
 ## Predicted Probability Distribution Visualisation
 
-![alt text](media/histo.png)
+![ ](media/histo.png)
 
 This reveals the model's exceptional confidence in its classifications, with most predictions clustering near the extreme values of 0.0 for fake news and 1.0 for real news. This bimodal distribution pattern indicates strong decision boundaries and minimal uncertainty in the model's predictions, with very few samples falling into the ambiguous middle range between 0.2 and 0.8. Such clear probability separation suggests that the LSTM successfully identified features that enable confident classification decisions. 
 
 ## t-SNE Visualisation
 
-![alt text](media/tsne.png)
+![ ](media/tsne.png)
 
 The t-SNE visualisation of LSTM embeddings provides compelling evidence of the model's feature learning capabilities, displaying clear cluster separation between fake and real news articles in the reduced-dimensional space. The distinct groupings with close to no overlap between classes (1 for real news, 0 for fake news) demonstrates that the LSTM network successfully learned meaningful semantic representations, capturing the differences between authentic and fake news content. This separation in the embedding space reflects the model's ability to extract relevant linguistic patterns and structural characteristics that distinguish the two categories. The clear clustering within each class further indicates that the model identified consistent patterns across similar article types, enabling robust classification performance. 
 
