@@ -44,7 +44,7 @@ Chloe Dube (2602515)
 # Introduction
 
 ::: {.center}
-![](media/news.png){ width=75% }
+![](media/news.png){width=75%}
 :::
 
 In this project, we present a Long Short-Term Memory (LSTM) neural network to classify news articles as real or fake based on their textual content. LSTMs, a type of recurrent neural network (RNN), are particularly effective for sequential data tasks due to their ability to capture long range dependencies and contextual information within text. This makes them well-suited for natural language processing tasks such as fake news detection, where meaning often depends on the broader context of sentences and paragraphs.
@@ -228,7 +228,7 @@ Given these strengths, building an LSTM model for the binary classification seem
 - **Loss**: The function the model tries to minimize, so it measures the difference between predicted and actual outputs.            
 - **No. of LSTM layers**: How many LSTM layers are stacked, in our binary classification case it is better limited to 1.
 - **Droput** - Dropout is a regularization method where input and recurrent connections to LSTM units are probabilistically excluded from activation and weight updates while training a network. This has the effect of reducing overfitting and improving model performance (Brownlee, 2017)
-- **Weight Decay** - 
+- **Weight Decay** - Also known as L2 Regularization, is used to regularize the weights by penalizing large weights in the network.
 
 ### Evaluation Metrics
 
@@ -318,7 +318,7 @@ The model and data pre-processing are implemented using `PyTorch` as an aspect, 
     - `import torch.nn`
     
 
-It is particulary relevant to our chosen `LSTM` model because 
+It is particulary relevant to our chosen `LSTM` model because PyTorch offers support for sequential models, such as LSTMs, with easy to use abstractions like `nn.LSTM`, dynamic computational graphs, and integration with GPU acceleration. These features make PyTorch well-suited for handling natural language data and efficiently training sequence models.
 
 ## Natural Language Toolkit (NLTK)
 
@@ -358,7 +358,11 @@ NLTK's tokenization functions were employed at two levels:
 - Data Encoding  
     1. Encoded text using vocabulary indices  
     2. Handled unknown words with `<unk>`  
-    3. Padded/truncated to fixed length (`MAX_ARTICLE_LEN`)  
+    3. Padded/truncated to fixed length (`MAX_ARTICLE_LEN`)
+
+NLTK was critical in preparing the news dataset for training the LSTM model, which classifies articles as real or fake. Since LSTMs are sensitive to the structure and quality of input sequences, effective preprocessing ensures that the model learns meaningful patterns rather than noise.
+
+Overall, this NLTK used in the preprocessing pipeline enhances the quality and consistency of the text data, enabling the LSTM model to better learn the linguistic and semantic patterns that differentiate the real news from fake news.
 
 
 ## Scikit-learn
@@ -420,6 +424,14 @@ def Split_Dataset(dataset):
 
         - Same splits across different runs
         - Consistent model evaluation
+
+Scikit-learn was used to support the evaluation and data preparation stages of the LSTM-based fake news classifier. Its `train_test_split` function enabled systematic splitting of the dataset into training (60%), validation (20%), and test (20%) sets. Importantly, the use of the `stratify` parameter preserved the original class distribution across all subsets, which is important when working with potentially imbalanced datasets like fake vs. real news.
+
+In addition, setting a fixed `random_state` ensured reproducibility, enabling consistent model training and fair comparisons across experiments.
+
+For performance evaluation, Scikit-learn's metric functions (`accuracy_score`, `classification_report`, `confusion_matrix`) provided an analysis of the model’s predictions. These metrics helped quantify not just overall accuracy, but also class-specific precision, recall, and F1-scores.
+
+With Scikit-learn, the pipeline ensures reliable dataset handling and standardized evaluation, both of which are essential for developing trustworthy models in fake news detection tasks.
 
 \newpage
 <div class="page-break"></div>
