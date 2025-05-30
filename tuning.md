@@ -5,11 +5,15 @@ Tuning was done manually. The hyperparameters were modified one at a time to tes
 
 ## Number of LSTM layers
 
-Originally, our model utilised only one LSTM layer and no dropout.
+Originally, our model utilised only one LSTM layer. This was increased to two layers to capture hierarchical patterns and dependencies, ultimately increasing accuracy. To avoid further overfitting, regularization was introduced via:
 
 ### Dropout
 
+A fraction of the neurons in a layer are dropped out each forward pass so the model does not learn to rely on any one feature. We set this to 0.5.
+
 ### Weight decay
+
+Equivalent to L2 regularization, we introduced weight decay to prevent the model from memorising training data and prevent exploding gradients.
 
 ## Batch size
 
