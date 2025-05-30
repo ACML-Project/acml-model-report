@@ -3,5 +3,6 @@
 * [Dataset Description](1.md)
 * [Data preprocessing](3.md)
 * [Model Choice](model.md)
-* [ Python Libraries, Frameworks and packages](2.md)
+* [Python Libraries, Frameworks and packages](2.md)
+* [Hyperparameter Tuning](tuning.md)
 * [References](references.md)

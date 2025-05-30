@@ -57,10 +57,10 @@ This report outlines the architecture and implementation of the LSTM model, deta
 
 # The Dataset
 
-## Fake News detection dataset
+### Fake News detection dataset
 The dataset can be found at: https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset/data .
 
-There are two datasets included, we have `Fake.csv` and `True.csv` where the structure is as follows →
+There are two datasets included. We have `Fake.csv` and `True.csv` where the structure is as follows →
 
 ## Structure:
 - Dataset separated in two files:
@@ -75,17 +75,16 @@ There are two datasets included, we have `Fake.csv` and `True.csv` where the str
     - Subject: subject of news article
     - Date: publish date of news article
 
-The targets for the data are `Fake` and `Real`, thus the classification of the dataset is a binary classification.
+The targets for the data are `Fake` and `Real`, thus the classification of the dataset is a binary text classification. To be able to work with the data appropriately, a file `Create_Dataset.py` merges the true and fake datasets and returns a merged and shuffled collection. This collection has the null values and duplicates removed, resulting in the following distribution:
 
-![alt text](media/image-1.png){ width=50% }
-![alt text](media/chart.png){ width=50% }
-![alt text](media/class.png){ width=100%}
+![alt text](media/image-1.png)
 
-## Data management:
+There is a moderate class imbalance (~45.2% `Fake` vs ~54.84% `Real` news articles). Oversampling and reweighting proved unnecessary as the model performed well on both classes and the confusion matrix (discussed later) showed balanced errors.
 
-To be able to work with the data appropriately, a file `Create_Dataset.py` merges the true and fake datasets and returns the dataset as a merged and shuffled collection, this collection has the null values removed.
+It was decided that only the body text of the news articles would be used in training the model. As seen below, the subject of the news articles made classification trivial as all the `Real` articles are classed as either `World News` or `Politics News` while the `Fake` articles had more variation - `US News`, `Middle East`, `Left News`, `Government News`, `Politics` and, simply, `News`. 
 
-Additionally, the features in the dataset were seperated into dependant and independant features so that it can be determined which features rely on others to be classified in the model.
+![alt text](media/class.png)
+![alt text](media/chart.png)
 
 \newpage
 
@@ -93,22 +92,29 @@ Additionally, the features in the dataset were seperated into dependant and inde
 
  To prepare the data for training a text classification model, we applied a series of Natural Language Processing preprocessing steps. These steps were implemented in Python using the NLTK library and were designed to reduce noise, standardize the text, remove unnecessary variation and convert raw language into embeddings (the real-valued vectors consumed by the LSTM).
 
-## Preprocessing pipeline:
+## Data Splitting
+**Before the vocabulary filtering, the dataset was split using SKlearn into:**
+ - 60% training set – for model learning.
+ - 20% validation set – for hyperparameter tuning and model selection.
+ - 20% test set – for final performance evaluation.
 
+ ![alt text](media/pi.png)
+
+## Preprocessing pipeline:
 **1. Dataset Construction and Removing Duplicates:**
 
-- Combined Fake.csv and True.csv datasets into `Create_Dataset`, added binary labels (0 = fake, 1=real).
+- Combined Fake.csv and True.csv datasets into `Create_Dataset`, added binary labels (`0` = fake, `1` = real).
 - Removed rows with empty text and removed duplicate articles.
 - Shuffled the resulting dataset.
-- Originally, we had 44 898 articles, after removing 6252 duplicates and 631 empty-text rows, we ended up with 38 646 articles.
+- Originally, we had 44 898 articles, after removing 6 252 duplicates and 631 empty-text rows, we ended up with 38 646 articles.
 
 **2. Lowercasing and Data Cleaning:**
 
-In Preprocessing.py, all text was converted to lowercase. Special characters, punctuation, and non-alphabetic symbols were removed via regex. 
+In `Preprocessing.py`, all text was converted to lowercase. Special characters, punctuation, and non-alphabetic symbols were removed via regex. 
 
 **3. Sentence and Word Tokenization:**
 
-Articles were split into individual sentences, and each sentence was further tokenized into words using NLTK's word_tokenize function.
+Articles were split into individual sentences, and each sentence was further tokenized into words using NLTK's `word_tokenize` function.
 
 **4. Stopword Removal:**
 
@@ -118,36 +124,27 @@ Common English stopwords (e.g., "the", "and", "in") were removed to eliminate lo
 
 Remaining words were lemmatized to reduce each word to its base form (e.g., "running" becomes "run").
 
-**6. Special Tokens and Length Limitation:**
+**6. Special Tokens:**
 
-We added an end of sentence token to each sentence. This helped the model recognize where sentences began and ended. Each article was then condensed to a maximum length of 256 tokens. This was done to ensure that all inputs were the same length and to avoid exceeding memory constraints.
+We added an end of sentence token `<eos>` to each sentence. This helped the model recognize where sentences began and ended - an important step in training the model to understand sentence structure and anchor the position of key information.
 
 **7. Vocabulary Filtering:**
 
-We built a vocabulary from the cleaned tokens, keeping only tokens that occurred at least 3 times in the training dataset. Words not in the vocabulary were replaced with an `<unk>` (unknown) token.
+We built an enumerated vocabulary from the cleaned tokens, keeping only tokens that occurred at least 3 times in the training dataset. This ensures the model learns to generalise from known patterns on seen data and can successfully handle unseen data during validation and testing.
 
-**8. Padding:**
+**8. Truncation and Padding:**
 
-All token sequences were padded so that every article was the same length. This was necessary for batch processing and consistent input dimensions for the LSTM.
+Each article was then condensed to a maximum length of 256 tokens. The beginning of a news article typically contains the most important content. LSTMs struggle with long sequences as they increase learning complexity, resulting in overfitting and making training noisier. All token sequences less than the maximum length were padded so that every article was the same length - necessity for batch processing and consistent input dimensions for the LSTM.
+
+**9. Integer Encoding:**
+
+LSTMs require numeric inputs that act as lookup keys for the embedding layer. The processed data was encoded as integer sequences using the vocabulary's enumeration. OOV (out-of-vocabulary) words were replaced with an `<unk>` (unknown) token.
+
 
 We used NLTK for linguistic preprocessing (tokenization, stopword removal, and lemmatization)
 In addition to these steps, we implemented efficient data storage. The final encoded dataset and vocabulary were saved as .pkl files in the Pickled_data folder to keep file sizes small and avoid exceeding GitHub's 100MB commit limit. Human-readable .txt files—containing the unprocessed text, vocabulary, and encoded sequences—were saved in a Readables folder, which is excluded from version control. These preprocessing steps not only standardized and cleaned the text but also contributed to noise reduction, dimensionality control (through a filtered vocabulary), and semantic consistency (via lemmatization). As a result, the model was able to train more efficiently and generalize better to unseen data.
 
-
-
-## Data Splitting
-
-**The dataset was split using SKlearn into:**
-
- - 60% training set – for model learning.
-
- - 20% validation set – for hyperparameter tuning and model selection.
-
- - 20% test set – for final performance evaluation.
- 
- ![alt text](media/pi.png)
-
- \newpage
+\newpage
 
 
 # Long Short Term Memory (LSTM)
@@ -170,21 +167,26 @@ This one cycle of LSTM is considered a single-time step.
 The cell state will carry all the information about the data as well as the timestamps.
 
 Finally the LSTM computations are done in the following way: 
-Computation in a LSTM is done by first concatenating the current input `x(t)` with the previous short-term memory `h(t - 1)` to get `x(t)h(t - 1)` and then computing 
+Computation in a LSTM is done by first concatenating the current input `x(t)` with the previous short-term memory `h(t − 1)` to get `x(t)h(t − 1)` and then computing 
 
-- Forget gate: $f(t) = \sigma([x(t), h(t - 1)] W_f + b_f)$  
-- Input gate: $i(t) = \sigma([x(t), h(t - 1)] W_i + b_i)$  
-- Candidate memory: $\tilde{c}(t) = \tanh([x(t), h(t - 1)] W_c + b_c)$  
-- Output gate: $o(t) = \sigma([x(t), h(t - 1)] W_o + b_o)$  
+- Forget gate: f(t) = σ(x(t)h(t − 1)W<sub>f</sub> + b<sub>f</sub>)
+- Input gate: i(t) =  σ(x(t)h(t − 1)W<sub>i</sub> + b<sub>i</sub>)
+- Candidate memory: c(t) = tanh(x(t)h(t − 1)W<sub>c</sub>  + b<sub>c</sub> )
+- Output gate: o(t) = σ(x(t)h(t − 1)W<sub>o</sub>  + b<sub>o</sub> )
 
 The above vectors are then combined as follows:
-- $c(t) = f(t) \odot c(t - 1) + i(t) \odot \tilde{c}(t)$  
-- $h(t) = o(t) \odot \tanh(c(t))$
+- &tilde;c(t) = f(t)⊙&tilde;c(t − 1) + i(t)⊙c(t)
+- h(t) = o(t)⊙tanh(&tilde;c(t))
 where  represents pointwise multiplication of vectors
 
 
 
 ## Reasoning for choice of LSTM
+
+RNNs are particularly effective at processing sequential data, such as language and text, due to their ability to capture temporal dependencies. This makes them more suitable for text analysis compared to other architectures like Convolutional Neural Networks (CNNs) or standard feedforward networks.
+A key advantage of RNNs lies in their internal loop structures, which allow them to retain information across time steps—an essential feature for understanding context in sequential data. This capability enables RNNs to detect semantic patterns and relationships between words, which is critical in applications such as fake news detection.
+
+LSTMs, an advanced form of RNNs, further enhance performance by mitigating the vanishing gradient problem. This allows the model to preserve and leverage important information from earlier in the sequence, improving classification accuracy, especially in longer texts. Additionally, LSTMs can handle input sequences of variable lengths, providing flexibility that static-length models lack.
 
 Most machine learning models often rely on fixed-size input vectors and may fail to capture the nuanced dependencies that exist across time steps in a sequence. Whereas, Long Short-Term Memory (LSTM) networks are specifically designed to handle sequential data, making them appropriate for text classification tasks such as fake news detection.
 
@@ -193,6 +195,11 @@ The memory and gating features allow LSTMs to selectively retain or discard info
 Considering our dataset, we have the task of identifying whether excerpts of text can be classified as fake or genuine news articles. LSTMs are relevant in this case in that they have feedback connections, allowing them to process entire sequences of data, not just individual data points. This makes them highly effective in understanding and predicting patterns in sequential data like text and speech (saxena, 2021).
 
 Given these strengths, building an LSTM model for the binary classification seemed an appropriate choice.
+
+
+## Machine learning algorithm used
+
+In this implementation, the machine learning algorithm used was a supervised learning approach with a stacked LSTM network. The model was trained using backpropagation through time (BPTT) with the Adam optimiser, and classification was guided by the Cross-Entropy Loss function. These methods enabled effective optimisation of the LSTM parameters for binary text classification. The entire model was trained on labelled fake and real news data, allowing it to learn and generalise patterns that distinguish between the two categories.
 
 
 
@@ -230,16 +237,17 @@ Given these strengths, building an LSTM model for the binary classification seem
 - **Droput** - Dropout is a regularization method where input and recurrent connections to LSTM units are probabilistically excluded from activation and weight updates while training a network. This has the effect of reducing overfitting and improving model performance (Brownlee, 2017)
 - **Weight Decay** - Also known as L2 Regularization, is used to regularize the weights by penalizing large weights in the network.
 
+
 ### Evaluation Metrics
 
 - **Metrics**: Evaluation criteria during training and testing. E.g `accuracy` for training, `F1, precision, and recall` for evaluation.
 
 | Metric      | Formula               | Purpose                  |
 |-------------|-----------------------|--------------------------|
-| **Accuracy**  | $$ \frac{TP + TN}{Total} $$| Measures overall prediction correctness |
-| **Precision** | $$\frac{TP}{TP + FP}$$    | Controls false positives |
-| **Recall**    | $$\frac{TP}{TP + FN}$$    | Controls false negatives |
-| **F1-Score**  | $$2 \times \frac{P \times R}{P + R}$$ | Harmonic mean of precision and recall |
+| **Accuracy**  | $ \frac{TP + TN}{Total} $| Measures overall prediction correctness |
+| **Precision** | $\frac{TP}{TP + FP}$    | Controls false positives |
+| **Recall**    | $\frac{TP}{TP + FN}$    | Controls false negatives |
+| **F1-Score**  | $2 \times \frac{P \times R}{P + R}$ | Harmonic mean of precision and recall |
 
 ##### These values are used to compute the confusion matrix:
 - **TP**: True Positives  
